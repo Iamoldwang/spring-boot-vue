@@ -6,6 +6,14 @@ import router from './router'
 
 Vue.config.productionTip = false
 
+//引入font-awesome
+import 'font-awesome/css/font-awesome.min.css'
+//引入ElementUI
+import ElementUI from 'element-ui'
+//引入自定义主题
+import './assets/theme/element-#E3BA63/index.css'
+Vue.use(ElementUI)
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
