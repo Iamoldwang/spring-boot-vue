@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wwhy.dao.LogDao">
+	<resultMap id="BaseResultMap" type="com.wwhy.entity.LogEntity">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="TINYINT" />
+		<result column="person_id" property="personId" jdbcType="BIGINT" />
+		<result column="person_name" property="personName" jdbcType="VARCHAR" />
+		<result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		id,content,type,person_id,person_name,log_time,remark
+	</sql>
+	<!-- 根据ID查询数据 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select
+		<include refid="Base_Column_List" />
+		from log
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<!-- 根据条件查询数据 -->
+	<select id="selectAll" resultType="logEntity" parameterType="logEntity">
+		select
+		<include refid="Base_Column_List" />
+		from log
+		<where>
+			<if test="id != null">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="content != null and content.length() > 0">
+				and content = #{content,jdbcType=VARCHAR}
+			</if>
+			<if test="type != null">
+				and type = #{type,jdbcType=TINYINT}
+			</if>
+			<if test="personId != null">
+				and person_id = #{personId,jdbcType=BIGINT}
+			</if>
+			<if test="personName != null and personName.length() > 0">
+				and person_name = #{personName,jdbcType=VARCHAR}
+			</if>
+			<if test="logTime != null">
+				and log_time = #{logTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="remark != null and remark.length() > 0">
+				and remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+	<!-- 根据ID删除数据 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+		delete from log where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<!-- 添加记录 -->
+	<insert id="insert" parameterType="com.wwhy.entity.LogEntity">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into log (
+			content,
+			type,
+			person_id,
+			person_name,
+			log_time,
+			remark
+		) values(
+			#{content,jdbcType=VARCHAR},
+			#{type,jdbcType=TINYINT},
+			#{personId,jdbcType=BIGINT},
+			#{personName,jdbcType=VARCHAR},
+			#{logTime,jdbcType=TIMESTAMP},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 添加不为空的记录 -->
+	<insert id="insertSelective" parameterType="com.wwhy.entity.LogEntity">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="content != null">
+				content,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="personId != null">
+				person_id,
+			</if>
+			<if test="personName != null">
+				person_name,
+			</if>
+			<if test="logTime != null">
+				log_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=TINYINT},
+			</if>
+			<if test="personId != null">
+				#{personId,jdbcType=BIGINT},
+			</if>
+			<if test="personName != null">
+				#{personName,jdbcType=VARCHAR},
+			</if>
+			<if test="logTime != null">
+				#{logTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 根据ID修改不为空的数据 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.wwhy.entity.LogEntity" >
+		update log
+		<set>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=TINYINT},
+			</if>
+			<if test="personId != null">
+				person_id = #{personId,jdbcType=BIGINT},
+			</if>
+			<if test="personName != null">
+				person_name = #{personName,jdbcType=VARCHAR},
+			</if>
+			<if test="logTime != null">
+				log_time = #{logTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<!-- 根据ID修改数据 -->
+	<update id="updateByPrimaryKey" parameterType="com.wwhy.entity.LogEntity" >
+		update log set
+			content = #{content,jdbcType=VARCHAR},
+			type = #{type,jdbcType=TINYINT},
+			person_id = #{personId,jdbcType=BIGINT},
+			person_name = #{personName,jdbcType=VARCHAR},
+			log_time = #{logTime,jdbcType=TIMESTAMP},
+			remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

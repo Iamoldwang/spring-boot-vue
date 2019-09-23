@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wwhy.dao.BasicDataDao">
+    <resultMap id="BaseResultMap" type="com.wwhy.entity.BasicDataEntity">
+        <id column="type" property="type" jdbcType="SMALLINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="basic_name" property="basicName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        type,name,basic_code,basic_name
+    </sql>
+    <!--根据type获取基本数据类型 -->
+    <select id="selectByType" resultMap="BaseResultMap" parameterType="short">
+        select
+        <include refid="Base_Column_List"/>
+        from basic_data
+        where type = #{type,jdbcType=SMALLINT}
+    </select>
+
+    <select id="selectBasicDataByTypeCode" resultMap="BaseResultMap" parameterType="com.wwhy.entity.BasicDataEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from basic_data
+        where type = #{type,jdbcType=SMALLINT}
+        and basic_code = #{basicCode,jdbcType=VARCHAR}
+    </select>
+
+    <!-- 根据条件查询数据 -->
+    <select id="selectAll" resultType="com.wwhy.entity.BasicDataEntity" parameterType="com.wwhy.entity.BasicDataEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from basic_data
+        <where>
+            <if test="type != null">
+                and type = #{type,jdbcType=SMALLINT}
+            </if>
+            <if test="name != null and name.length() > 0">
+                and name = #{name,jdbcType=VARCHAR}
+            </if>
+            <if test="basicCode != null and basicCode.length() > 0">
+                and basic_code = #{basicCode,jdbcType=VARCHAR}
+            </if>
+            <if test="basicName != null and basicName.length() > 0">
+                and basic_name = #{basicName,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+    <select id="getAllNames" resultMap="BaseResultMap">
+        SELECT DISTINCT type,name,count(type) as basic_code from basic_data GROUP BY type
+    </select>
+    <!-- 根据type 和 basicCode删除 -->
+    <delete id="deleteByTypeAndBasicCode">
+		delete from basic_data where type = #{type,jdbcType=SMALLINT} and basic_code = #{basicCode,jdbcType=VARCHAR}
+	</delete>
+    <!-- 添加记录 -->
+    <insert id="insert" parameterType="com.wwhy.entity.BasicDataEntity">
+        <selectKey resultType="java.lang.Long" keyProperty="type" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into basic_data (
+        name,
+        basic_name
+        ) values(
+        #{name,jdbcType=VARCHAR},
+        #{basicName,jdbcType=VARCHAR}
+        )
+    </insert>
+    <!-- 添加不为空的记录 -->
+    <insert id="insertSelective" parameterType="com.wwhy.entity.BasicDataEntity">
+        insert into basic_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">
+                type,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="basicCode != null">
+                basic_code,
+            </if>
+            <if test="basicName != null">
+                basic_name,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">
+                #{type,jdbcType=SMALLINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="basicCode != null">
+                #{basicCode,jdbcType=VARCHAR},
+            </if>
+            <if test="basicName != null">
+                #{basicName,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!-- 根据ID修改不为空的数据 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.wwhy.entity.BasicDataEntity" >
+        update basic_data
+        <set>
+            <if test="basicName != null">
+                basic_name = #{basicName,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where type = #{type,jdbcType=SMALLINT} and basic_code = #{basicCode,jdbcType=VARCHAR}
+    </update>
+    <!-- 根据ID修改数据 -->
+    <update id="updateByPrimaryKey" parameterType="com.wwhy.entity.BasicDataEntity" >
+		update basic_data set
+			name = #{name,jdbcType=VARCHAR},
+			basic_name = #{basicName,jdbcType=VARCHAR}
+		where type = #{type,jdbcType=SMALLINT}
+	</update>
+</mapper>

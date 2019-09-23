@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wwhy.dao.TeacherDao">
+	<resultMap id="BaseResultMap" type="com.wwhy.entity.TeacherEntity">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="code" property="code" jdbcType="VARCHAR" />
+		<result column="birthday" property="birthday" jdbcType="DATE" />
+		<result column="sex" property="sex" jdbcType="TINYINT" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="identity" property="identity" jdbcType="VARCHAR" />
+		<result column="nation" property="nation" jdbcType="VARCHAR" />
+		<result column="nationality" property="nationality" jdbcType="VARCHAR" />
+		<result column="native_place" property="nativePlace" jdbcType="VARCHAR" />
+		<result column="major" property="major" jdbcType="VARCHAR" />
+		<result column="entrance_date" property="entranceDate" jdbcType="DATE" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+		id,name,password,code,birthday,sex,phone,identity,nation,nationality,native_place,major,entrance_date,remark
+	</sql>
+	<!-- 根据ID查询数据 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select
+		<include refid="Base_Column_List" />
+		from teacher
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<!-- 根据条件查询数据 -->
+	<select id="selectAll" resultType="com.wwhy.entity.TeacherEntity" parameterType="com.wwhy.entity.TeacherEntity">
+		select
+		<include refid="Base_Column_List" />
+		from teacher
+		<where>
+			name != "admin"
+			<if test="id != null">
+				and id = #{id,jdbcType=BIGINT}
+			</if>
+			<if test="name != null and name.length() > 0">
+				and name = #{name,jdbcType=VARCHAR}
+			</if>
+			<if test="code != null and code.length() > 0">
+				and code = #{code,jdbcType=VARCHAR}
+			</if>
+			<if test="birthday != null">
+				and birthday = #{birthday,jdbcType=DATE}
+			</if>
+			<if test="sex != null">
+				and sex = #{sex,jdbcType=TINYINT}
+			</if>
+			<if test="phone != null and phone.length() > 0">
+				and phone = #{phone,jdbcType=VARCHAR}
+			</if>
+			<if test="identity != null and identity.length() > 0">
+				and identity = #{identity,jdbcType=VARCHAR}
+			</if>
+			<if test="nation != null and nation.length() > 0">
+				and nation = #{nation,jdbcType=VARCHAR}
+			</if>
+			<if test="nationality != null and nationality.length() > 0">
+				and nationality = #{nationality,jdbcType=VARCHAR}
+			</if>
+			<if test="nativePlace != null and nativePlace.length() > 0">
+				and native_place = #{nativePlace,jdbcType=VARCHAR}
+			</if>
+			<if test="major != null and major.length() > 0">
+				and major = #{major,jdbcType=VARCHAR}
+			</if>
+			<if test="entranceDate != null">
+				and entrance_date = #{entranceDate,jdbcType=DATE}
+			</if>
+			<if test="remark != null and remark.length() > 0">
+				and remark = #{remark,jdbcType=VARCHAR}
+			</if>
+		</where>
+	</select>
+    <select id="selectForLogin" resultType="com.wwhy.entity.TeacherEntity">
+		select
+		<include refid="Base_Column_List" />
+		from teacher
+		where name = #{name,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+	</select>
+    <!-- 根据ID删除数据 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+		delete from teacher where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<!-- 添加记录 -->
+	<insert id="insert" parameterType="com.wwhy.entity.TeacherEntity">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into teacher (
+			name,
+			password,
+			code,
+			birthday,
+			sex,
+			phone,
+			identity,
+			nation,
+			nationality,
+			native_place,
+			major,
+			entrance_date,
+			remark
+		) values(
+			#{name,jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{code,jdbcType=VARCHAR},
+			#{birthday,jdbcType=DATE},
+			#{sex,jdbcType=TINYINT},
+			#{phone,jdbcType=VARCHAR},
+			#{identity,jdbcType=VARCHAR},
+			#{nation,jdbcType=VARCHAR},
+			#{nationality,jdbcType=VARCHAR},
+			#{nativePlace,jdbcType=VARCHAR},
+			#{major,jdbcType=VARCHAR},
+			#{entranceDate,jdbcType=DATE},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	<!-- 添加不为空的记录 -->
+	<insert id="insertSelective" parameterType="com.wwhy.entity.TeacherEntity">
+		<selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+		insert into teacher
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				name,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="birthday != null">
+				birthday,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="identity != null">
+				identity,
+			</if>
+			<if test="nation != null">
+				nation,
+			</if>
+			<if test="nationality != null">
+				nationality,
+			</if>
+			<if test="nativePlace != null">
+				native_place,
+			</if>
+			<if test="major != null">
+				major,
+			</if>
+			<if test="entranceDate != null">
+				entrance_date,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				#{birthday,jdbcType=DATE},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=TINYINT},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="identity != null">
+				#{identity,jdbcType=VARCHAR},
+			</if>
+			<if test="nation != null">
+				#{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="nationality != null">
+				#{nationality,jdbcType=VARCHAR},
+			</if>
+			<if test="nativePlace != null">
+				#{nativePlace,jdbcType=VARCHAR},
+			</if>
+			<if test="major != null">
+				#{major,jdbcType=VARCHAR},
+			</if>
+			<if test="entranceDate != null">
+				#{entranceDate,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<!-- 根据ID修改不为空的数据 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.wwhy.entity.TeacherEntity" >
+		update teacher
+		<set>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="birthday != null">
+				birthday = #{birthday,jdbcType=DATE},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=TINYINT},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="identity != null">
+				identity = #{identity,jdbcType=VARCHAR},
+			</if>
+			<if test="nation != null">
+				nation = #{nation,jdbcType=VARCHAR},
+			</if>
+			<if test="nationality != null">
+				nationality = #{nationality,jdbcType=VARCHAR},
+			</if>
+			<if test="nativePlace != null">
+				native_place = #{nativePlace,jdbcType=VARCHAR},
+			</if>
+			<if test="major != null">
+				major = #{major,jdbcType=VARCHAR},
+			</if>
+			<if test="entranceDate != null">
+				entrance_date = #{entranceDate,jdbcType=DATE},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<!-- 根据ID修改数据 -->
+	<update id="updateByPrimaryKey" parameterType="com.wwhy.entity.TeacherEntity" >
+		update teacher set
+			name = #{name,jdbcType=VARCHAR},
+			code = #{code,jdbcType=VARCHAR},
+			birthday = #{birthday,jdbcType=DATE},
+			sex = #{sex,jdbcType=TINYINT},
+			phone = #{phone,jdbcType=VARCHAR},
+			identity = #{identity,jdbcType=VARCHAR},
+			nation = #{nation,jdbcType=VARCHAR},
+			nationality = #{nationality,jdbcType=VARCHAR},
+			native_place = #{nativePlace,jdbcType=VARCHAR},
+			major = #{major,jdbcType=VARCHAR},
+			entrance_date = #{entranceDate,jdbcType=DATE},
+			remark = #{remark,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>
