@@ -32,7 +32,7 @@
             <el-button type="success" @click="handleReset" icon="el-icon-refresh">重置</el-button>
           </el-form-item>
 
-          <el-form-item v-if="currentLoginType == 'teacher'">
+          <el-form-item v-if="currentLoginType != 'student'">
             <el-button type="primary" @click="handleAdd" icon="el-icon-circle-plus-outline">添加</el-button>
           </el-form-item>
 
@@ -78,15 +78,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" min-width="100px">
+      <el-table-column label="操作" align="center" min-width="100px" v-if="currentLoginType != 'student'">
         <template slot-scope="scope">
           <el-button
-            v-if="currentLoginType == 'teacher'"
             size="mini"
             type="success"
             @click="handleUpdate(scope.$index, scope.row)">编辑</el-button>
           <el-button
-            v-if="currentLoginType == 'teacher'"
             size="mini"
             type="danger"
             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
